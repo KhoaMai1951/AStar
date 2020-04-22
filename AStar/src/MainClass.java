@@ -9,7 +9,7 @@ public class MainClass {
 	public static void main(String[] args) {
 		
 		//Bản đồ 4x4 
-		//Chỉ được đi trên dưới phải trái, không được đi chéo
+		//Được đi trên dưới phải trái, đi chéo
 		//Trong kết quả xuất ra, PATH là đường đi, no là không đi
 		
 		Cell[][] map = new Cell[4][4]; // OK
@@ -167,110 +167,58 @@ public class MainClass {
 			//Find and handle North
 			if(rowMinFCost > 0)
 			{
-				if(map[colMinFCost][rowMinFCost - 1].getClose() == 0)
-				{
-					//New local path from current node to neighbor node
-					int newPath = map[colMinFCost][rowMinFCost].getgCost() 
-							+ Cell.calculateRealDistance(colMinFCost, rowMinFCost, colMinFCost, rowMinFCost - 1);
-					//If new local path < Neighbor's old local path then set neighbor new f value
-					if(newPath < map[colMinFCost][rowMinFCost - 1].getgCost())
-					{
-						map[colMinFCost][rowMinFCost - 1].setgCost(newPath);
-						//System.out.println("New g cost for ["+colMinFCost+"]["+(rowMinFCost - 1)+"] is "+ map[colMinFCost][rowMinFCost - 1].getgCost());
-						map[colMinFCost][rowMinFCost - 1].setfCost(newPath + map[colMinFCost][rowMinFCost - 1].gethCost());					
-						map[colMinFCost][rowMinFCost - 1].setParentX(colMinFCost);
-						map[colMinFCost][rowMinFCost - 1].setParentY(rowMinFCost);
-						//If neighbor is not in OPEN, add to OPEN
-						if(map[colMinFCost][rowMinFCost - 1].getNeutral() == 1)
-						{
-							map[colMinFCost][rowMinFCost - 1].setOpen(1);
-							map[colMinFCost][rowMinFCost - 1].setNeutral(0);
-						}
-						//System.out.println("New g cost for ["+colMinFCost+"]["+(rowMinFCost - 1)+"] is "+ map[colMinFCost][rowMinFCost - 1].getgCost());
-					}
-				}
+				handleNeighbor(colMinFCost, rowMinFCost, colMinFCost, rowMinFCost - 1, map);
 			}
 			//End find and handle north
 			
 			//Find and handle South
 			if(rowMinFCost < 3)
 			{
-				if(map[colMinFCost][rowMinFCost + 1].getClose() == 0)
-				{
-					//New local path from current node to neighbor node
-					int newPath = map[colMinFCost][rowMinFCost].getgCost() 
-							+ Cell.calculateRealDistance(colMinFCost, rowMinFCost, colMinFCost, rowMinFCost + 1);
-					//If new local path < Neighbor's old local path then set neighbor new f value
-					if(newPath < map[colMinFCost][rowMinFCost + 1].getgCost())
-					{
-						map[colMinFCost][rowMinFCost + 1].setgCost(newPath);
-						map[colMinFCost][rowMinFCost + 1].setfCost(newPath + map[colMinFCost][rowMinFCost + 1].gethCost());					
-						map[colMinFCost][rowMinFCost + 1].setParentX(colMinFCost);
-						map[colMinFCost][rowMinFCost + 1].setParentY(rowMinFCost);
-						//If neighbor is not in OPEN, add to OPEN
-						if(map[colMinFCost][rowMinFCost + 1].getNeutral() == 1)
-						{
-							map[colMinFCost][rowMinFCost + 1].setOpen(1);
-							map[colMinFCost][rowMinFCost + 1].setNeutral(0);
-						}
-						//System.out.println("New g cost for ["+colMinFCost+"]["+(rowMinFCost + 1)+"] is "+ map[colMinFCost][rowMinFCost + 1].getgCost());
-					}
-				}
+				handleNeighbor(colMinFCost, rowMinFCost, colMinFCost, rowMinFCost + 1, map);
 			}
 			//End find and handle South
 			
 			//Find and handle East
 			if(colMinFCost < 3)
 			{
-				if(map[colMinFCost+1][rowMinFCost].getClose() == 0)
-				{
-					//New local path from current node to neighbor node
-					int newPath = map[colMinFCost][rowMinFCost].getgCost() 
-							+ Cell.calculateRealDistance(colMinFCost, rowMinFCost, colMinFCost+1, rowMinFCost);
-					//If new local path < Neighbor's old local path then set neighbor new f value
-					if(newPath < map[colMinFCost + 1][rowMinFCost].getgCost())
-					{
-						map[colMinFCost + 1][rowMinFCost].setgCost(newPath);
-						map[colMinFCost + 1][rowMinFCost].setfCost(newPath + map[colMinFCost+1][rowMinFCost].gethCost());					
-						map[colMinFCost + 1][rowMinFCost].setParentX(colMinFCost);
-						map[colMinFCost + 1][rowMinFCost].setParentY(rowMinFCost);
-						//If neighbor is not in OPEN, add to OPEN
-						if(map[colMinFCost+1][rowMinFCost].getNeutral() == 1)
-						{
-							map[colMinFCost+1][rowMinFCost].setOpen(1);
-							map[colMinFCost+1][rowMinFCost].setNeutral(0);
-						}
-					}
-				}
+				handleNeighbor(colMinFCost, rowMinFCost, colMinFCost + 1, rowMinFCost, map);
 			}
 			//End find and handle East
 			
 			//Find and handle West
 			if(colMinFCost > 0)
 			{
-				if(map[colMinFCost - 1][rowMinFCost].getClose() == 0)
-				{
-					//New local path from current node to neighbor node
-					int newPath = map[colMinFCost][rowMinFCost].getgCost() 
-							+ Cell.calculateRealDistance(colMinFCost, rowMinFCost, colMinFCost-1, rowMinFCost);
-					//If new local path < Neighbor's old local path then set neighbor new f value
-					if(newPath < map[colMinFCost + 1][rowMinFCost].getgCost())
-					{
-						map[colMinFCost - 1][rowMinFCost].setgCost(newPath);
-						map[colMinFCost - 1][rowMinFCost].setfCost(newPath + map[colMinFCost-1][rowMinFCost].gethCost());					
-						map[colMinFCost - 1][rowMinFCost].setParentX(colMinFCost);
-						map[colMinFCost - 1][rowMinFCost].setParentY(rowMinFCost);
-						//If neighbor is not in OPEN, add to OPEN
-						if(map[colMinFCost-1][rowMinFCost].getNeutral() == 1)
-						{
-							map[colMinFCost-1][rowMinFCost].setOpen(1);
-							map[colMinFCost-1][rowMinFCost].setNeutral(0);
-						}
-					}
-				}
+				handleNeighbor(colMinFCost, rowMinFCost, colMinFCost - 1, rowMinFCost, map);
 			}
 			//End find and handle West
 			
+			//Find and handle North East
+			if(colMinFCost < 3 && rowMinFCost > 0)
+			{
+				handleNeighbor(colMinFCost, rowMinFCost, colMinFCost + 1, rowMinFCost - 1, map);
+			}
+			//End find and handle North East
+			
+			//Find and handle South East
+			if(colMinFCost < 3 && rowMinFCost < 3)
+			{
+				handleNeighbor(colMinFCost, rowMinFCost, colMinFCost + 1, rowMinFCost + 1, map);
+			}
+			//End find and handle South East
+			
+			//Find and handle South West
+			if(colMinFCost > 0 && rowMinFCost < 3)
+			{
+				handleNeighbor(colMinFCost, rowMinFCost, colMinFCost - 1, rowMinFCost + 1, map);
+			}
+			//End find and handle South West
+			
+			//Find and handle North West
+			if(colMinFCost > 0 && rowMinFCost > 0)
+			{
+				handleNeighbor(colMinFCost, rowMinFCost, colMinFCost - 1, rowMinFCost - 1, map);
+			}
+			//End find and handle North West
 		}
 	}
 
@@ -292,6 +240,30 @@ public class MainClass {
 			
 			currentCell = map[col][row];
 			
+		}
+	}
+	
+	public static void handleNeighbor(int col, int row, int neighborCol, int neighborRow, Cell[][] map)
+	{
+		if(map[neighborCol][neighborRow].getClose() == 0)
+		{
+			//New local path from current node to neighbor node
+			int newPath = map[col][row].getgCost() 
+					+ Cell.calculateRealDistance(col, row, neighborCol, neighborRow);
+			//If new local path < Neighbor's old local path then set neighbor new f value
+			if(newPath < map[neighborCol][neighborRow].getgCost())
+			{
+				map[neighborCol][neighborRow].setgCost(newPath);
+				map[neighborCol][neighborRow].setfCost(newPath + map[neighborCol][neighborRow].gethCost());					
+				map[neighborCol][neighborRow].setParentX(col);
+				map[neighborCol][neighborRow].setParentY(row);
+				//If neighbor is not in OPEN, add to OPEN
+				if(map[neighborCol][neighborRow].getNeutral() == 1)
+				{
+					map[neighborCol][neighborRow].setOpen(1);
+					map[neighborCol][neighborRow].setNeutral(0);
+				}
+			}
 		}
 	}
 }
