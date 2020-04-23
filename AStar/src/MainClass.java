@@ -10,7 +10,8 @@ public class MainClass {
 		
 		//Bản đồ 4x4 
 		//Được đi trên dưới phải trái, đi chéo
-		//Trong kết quả xuất ra, PATH là đường đi, no là không đi
+		//Trong kết quả xuất ra, PATH là đường đi, no là không đi, BLOCK là chướng ngại vật
+		//Nếu kết quả xuất ra không có PATH thì BLOCK đã chặn hết đường đi có thể nên không có đường đi
 		
 		Cell[][] map = new Cell[4][4]; // OK
 
@@ -33,7 +34,6 @@ public class MainClass {
 				}
 				else if(row == 3 && col == 3)
 				{
-					
 					map[col][row] = new Cell("END");
 					map[col][row].setgCost(9999);						//Local cost
 					map[col][row].sethCost(Cell.calculateHX(col, row));		//Heuristic cost
@@ -80,7 +80,6 @@ public class MainClass {
 					System.out.print(map[col][row].getType() +  "      ");
 					break;
 				}
-				
 			}
 			System.out.println("");
 		}
@@ -105,9 +104,12 @@ public class MainClass {
 					break;
 				case "PATH":
 					if(map[col][row].getRouteToGo() == 1)
-						System.out.print(map[col][row].getType() + "      ");
+						System.out.print(map[col][row].getType() + "       ");
 					else if(map[col][row].getRouteToGo() == 0)
-						System.out.print("no" + "        ");
+						System.out.print("___" + "        ");
+					break;
+				case "BLOCK":
+					System.out.print(map[col][row].getType() + "      ");
 					break;
 				}
 				
@@ -149,6 +151,11 @@ public class MainClass {
 			    }
 			});
 			
+			System.out.println(openList.size());
+			if(openList.size() == 0)
+			{
+				return;
+			}
 			colMinFCost = openList.get(0).getCol();
 			rowMinFCost = openList.get(0).getRow();
 			
@@ -245,23 +252,26 @@ public class MainClass {
 	
 	public static void handleNeighbor(int col, int row, int neighborCol, int neighborRow, Cell[][] map)
 	{
-		if(map[neighborCol][neighborRow].getClose() == 0)
+		if(map[neighborCol][neighborRow].getClose() == 0 )
 		{
-			//New local path from current node to neighbor node
-			int newPath = map[col][row].getgCost() 
-					+ Cell.calculateRealDistance(col, row, neighborCol, neighborRow);
-			//If new local path < Neighbor's old local path then set neighbor new f value
-			if(newPath < map[neighborCol][neighborRow].getgCost())
+			if(map[neighborCol][neighborRow].getType() != "BLOCK")
 			{
-				map[neighborCol][neighborRow].setgCost(newPath);
-				map[neighborCol][neighborRow].setfCost(newPath + map[neighborCol][neighborRow].gethCost());					
-				map[neighborCol][neighborRow].setParentX(col);
-				map[neighborCol][neighborRow].setParentY(row);
-				//If neighbor is not in OPEN, add to OPEN
-				if(map[neighborCol][neighborRow].getNeutral() == 1)
+				//New local path from current node to neighbor node
+				int newPath = map[col][row].getgCost() 
+						+ Cell.calculateRealDistance(col, row, neighborCol, neighborRow);
+				//If new local path < Neighbor's old local path then set neighbor new f value
+				if(newPath < map[neighborCol][neighborRow].getgCost())
 				{
-					map[neighborCol][neighborRow].setOpen(1);
-					map[neighborCol][neighborRow].setNeutral(0);
+					map[neighborCol][neighborRow].setgCost(newPath);
+					map[neighborCol][neighborRow].setfCost(newPath + map[neighborCol][neighborRow].gethCost());					
+					map[neighborCol][neighborRow].setParentX(col);
+					map[neighborCol][neighborRow].setParentY(row);
+					//If neighbor is not in OPEN, add to OPEN
+					if(map[neighborCol][neighborRow].getNeutral() == 1)
+					{
+						map[neighborCol][neighborRow].setOpen(1);
+						map[neighborCol][neighborRow].setNeutral(0);
+					}
 				}
 			}
 		}

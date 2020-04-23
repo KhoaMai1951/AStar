@@ -94,7 +94,16 @@ public class Cell {
 	}
 	public static String cellType()
 	{	
-		return "PATH";
+		Random r = new Random();
+		
+		int game = r.nextInt(100);
+		
+		if (game < 40)
+		{ 	// 20%
+			return "BLOCK";
+		}
+		
+		else return "PATH";
 	}
 	
 	public static int calculateGX(int x, int y)
