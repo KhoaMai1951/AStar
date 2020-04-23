@@ -151,7 +151,7 @@ public class MainClass {
 			    }
 			});
 			
-			System.out.println(openList.size());
+			
 			if(openList.size() == 0)
 			{
 				return;
