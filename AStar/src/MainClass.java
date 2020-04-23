@@ -10,7 +10,7 @@ public class MainClass {
 		
 		//Bản đồ 4x4 
 		//Được đi trên dưới phải trái, đi chéo
-		//Trong kết quả xuất ra, PATH là đường đi, no là không đi, BLOCK là chướng ngại vật
+		//Trong kết quả xuất ra, PATH là đường đi, __ là không đi, BLOCK là chướng ngại vật
 		//Nếu kết quả xuất ra không có PATH thì BLOCK đã chặn hết đường đi có thể nên không có đường đi
 		
 		Cell[][] map = new Cell[4][4]; // OK
